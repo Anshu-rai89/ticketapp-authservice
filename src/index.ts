@@ -7,12 +7,12 @@ import {NotFoundError} from './errors/404-error';
 const port =process.env.PORT || 3000;
 const app=express();
 app.use(json());
-app.use(errorHandler)
+
 
 
 // using routes 
 app.use('/',routes);
-
+app.use(errorHandler);
 
 app.listen(port,()=>{
     console.log(`server is up & running at ${port} !!` );
