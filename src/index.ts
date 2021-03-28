@@ -3,14 +3,10 @@ import 'express-async-errors';
 import {json} from 'body-parser';
 import routes from './routes';
 import {errorHandler} from './middleware/error-handler';
-import {NotFoundError} from './errors/404-error';
 import mongoose from 'mongoose';
 const port =process.env.PORT || 3000;
 const app=express();
 app.use(json());
-
-
-
 // using routes 
 app.use('/',routes);
 app.use(errorHandler);
