@@ -31,7 +31,7 @@ export const createUser=async(req:Request,res:Response)=>{
         const userJwt=jwt.sign({
             id:user._id,
             email:user.email
-        },'anshu');
+        },process.env.JWT_KEY!);
 
 
         req.session={
