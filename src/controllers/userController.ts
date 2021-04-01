@@ -1,5 +1,6 @@
 
 import {Response,Request} from 'express';
+import jwt from 'jsonwebtoken';
 import {validationResult} from 'express-validator';
 import {RequestValidationError} from '../errors/request-validation-error';
 import {User} from '../Modals/User';
@@ -25,6 +26,21 @@ export const createUser=async(req:Request,res:Response)=>{
 
         const user=User.build({email,password});
         user.save();
+
+        // generate JWT 
+        const userJwt=jwt.sign({
+            id:user._id,
+            email:user.email
+        },'anshu');
+
+
+        req.session={
+            jwt:userJwt
+        };
+
+        console.log("sending user jwt ",req.session);
+
+        // store it in session 
          //console.log('returning user',user);
-        return res.status(201).send({msg:"Signun UP sucess",data:user});
+        return res.status(201).send({user});
 }
