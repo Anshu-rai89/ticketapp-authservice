@@ -1,31 +1,25 @@
 
 import {Response,Request} from 'express';
 import jwt from 'jsonwebtoken';
-import {validationResult} from 'express-validator';
-import {RequestValidationError} from '../errors/request-validation-error';
 import {User} from '../Modals/User';
+import {BadRequestError} from '../errors/badRequestError';
+import {PasswordManager} from '../services/passwordManager';
 export const curruntUser=async (req:Request,res:Response)=>{
     res.send("Hello")
 
 }
 
 export const createUser=async(req:Request,res:Response)=>{
-    const errors=validationResult(req);
-    if(!errors.isEmpty()){
-        console.log('invalid request',errors.array())
-          throw new RequestValidationError(errors.array());
-          
-    }
         const body=req.body || {};
         const {email,password}=body;
 
         const existingUser=await User.findOne({email});
         if(existingUser){
-            return res.status(400);
+            throw new BadRequestError();
         }
 
         const user=User.build({email,password});
-        user.save();
+        await user.save();
 
         // generate JWT 
         const userJwt=jwt.sign({
@@ -38,9 +32,38 @@ export const createUser=async(req:Request,res:Response)=>{
             jwt:userJwt
         };
 
-        console.log("sending user jwt ",req.session);
-
         // store it in session 
          //console.log('returning user',user);
         return res.status(201).send({user});
 }
+
+
+export const createSession=async(req:Request,res:Response)=>{
+
+    const body=req.body || {};
+    const {email,password}=body;
+
+        const existingUser=await User.findOne({email});
+
+        console.log('existing user',existingUser);
+        if(!existingUser  || (!PasswordManager.compare(existingUser.password,password))){
+            throw new BadRequestError();
+        }
+
+
+        const userJwt=jwt.sign({
+            id:existingUser._id,
+            email:existingUser.email
+        },process.env.JWT_KEY!);
+
+
+        req.session={
+            jwt:userJwt
+        };
+
+        // store it in session 
+         //console.log('returning user',user);
+        return res.status(200).send(existingUser);
+
+}
+
