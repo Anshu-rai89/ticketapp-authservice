@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken';
 import {User} from '../Modals/User';
 import {BadRequestError} from '../errors/badRequestError';
 import {PasswordManager} from '../services/passwordManager';
-export const curruntUser=async (req:Request,res:Response)=>{
-    res.send("Hello")
+export const getCurruntUser=async (req:Request,res:Response)=>{
+   return res.status(200).send({curruntUser:req.currentUser || null});
 
 }
 
@@ -65,5 +65,10 @@ export const createSession=async(req:Request,res:Response)=>{
          //console.log('returning user',user);
         return res.status(200).send(existingUser);
 
+}
+
+export const signout=async (req:Request,res:Response)=>{
+    req.session=null;
+    return res.status(200).send({msg:"Signed Out Successfully"});
 }
 

@@ -1,10 +1,13 @@
 import express from "express";
 import { body } from "express-validator";
 import {
-  curruntUser,
+  getCurruntUser,
   createUser,
   createSession,
+  signout
 } from "../../controllers/userController";
+
+import {curruntUser} from '../../middleware/currentUser';
 import { requestValidation } from "../../middleware/requestValidation";
 const router = express.Router();
 
@@ -33,6 +36,6 @@ router.post(
   requestValidation,
   createSession
 );
-router.get("/curruntUser", curruntUser);
-
+router.get("/curruntUser",curruntUser, getCurruntUser);
+router.post('/signout',signout);
 export default router;
