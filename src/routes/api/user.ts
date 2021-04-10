@@ -7,8 +7,8 @@ import {
   signout
 } from "../../controllers/userController";
 
-import {curruntUser} from '../../middleware/currentUser';
-import { requestValidation } from "../../middleware/requestValidation";
+import {curruntUser} from '../../../common/src/index';
+import { requestValidation } from '../../../common/src/index';;
 const router = express.Router();
 
 router.post(

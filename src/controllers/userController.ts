@@ -2,8 +2,9 @@
 import {Response,Request} from 'express';
 import jwt from 'jsonwebtoken';
 import {User} from '../Modals/User';
-import {BadRequestError} from '../errors/badRequestError';
+
 import {PasswordManager} from '../services/passwordManager';
+import {BadRequestError} from '../../common/src/index';
 export const getCurruntUser=async (req:Request,res:Response)=>{
    return res.status(200).send({curruntUser:req.currentUser || null});
 

@@ -3,7 +3,7 @@ import cookieSession from 'cookie-session';
 import 'express-async-errors';
 import {json} from 'body-parser';
 import routes from './routes';
-import {errorHandler} from './middleware/error-handler';
+import {errorHandler} from '../common/src/index';
 import mongoose from 'mongoose';
 const port =process.env.PORT || 3000;
 const app=express();
